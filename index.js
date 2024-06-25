@@ -24,14 +24,42 @@ app.get("/api/hello", function (req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.get("/api/:date", async (req, res) => {
-  const unixDate = new Date(req.params.date)
-  const utcDate = new Date(req.params.date)
-  res.json({
-    unix: Number(unixDate.getTime()),
-    utc: utcDate
-  })
+app.get("/api/:date?", async (req, res) => {
+  let param = req.params.date;
+  let date;
+  if (!param) {
+    const now = new Date();
+    res.json({
+      unix: now.getTime(),
+      utc: now.toUTCString()
+    })
+    return;
+  }
+  else if (!isNaN(param)) {
+    date = new Date(parseInt(param))
+  }
+  else {
+    date = new Date(param)
+  }
+  if (date.toString() == "Invalid Date") {
+    res.json({ error: "Invalid Date" })
+  }
+  else {
+    if (!isNaN(param)) {
+      res.json({
+        unix: Number(req.params.date),
+        utc: date.toUTCString()
+      })
+    }
+    else {
+      res.json({
+        unix: Number(date.getTime()),
+        utc: date.toUTCString()
+      })
+    }
+  }
 })
+
 
 
 
