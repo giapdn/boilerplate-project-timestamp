@@ -26,9 +26,15 @@ app.get("/api/hello", function (req, res) {
 
 app.get("/api/:date", async (req, res) => {
   const unixDate = new Date(req.params.date)
-
-  res.json({ unix: Number(unixDate.getTime()) })
+  const utcDate = new Date(req.params.date)
+  res.json({
+    unix: Number(unixDate.getTime()),
+    utc: utcDate
+  })
 })
+
+
+
 
 
 
